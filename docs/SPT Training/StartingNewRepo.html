@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.18">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.19">
     
     
       
@@ -4409,7 +4409,7 @@
 
 ## Starting from local storage:
 -->
-<p>One of the first items to be added to the repo should be the .gitignore file. If the ignore file is added after a file(s) that is to be ignored, then that file(s) must be dealt with. The .gitignore file is used in order to not save files that change frequently in the background, and also files that you might want to save in a different repository such as libraries. There are also some files that are specific to the user environment and therefore each programmer should have their own local version of these files. The .gitignore file for the SPT_XPlanar_Demo is a good starter file: https://github.com/Beckhoff-USA-Community/SPT_XPlanar_Demo/blob/master/.gitignore or you can create your own at: https://www.toptal.com/developers/gitignore. Further details about the contents of the gitignore file can be found below in the Sample gitignore file.</p>
+<p>One of the first items to be added to the repo should be the .gitignore file. If the ignore file is added after a file(s) that is to be ignored, then that file(s) must be dealt with. The .gitignore file is used in order to not save files that change frequently in the background, and also files that you might want to save in a different repository such as libraries. There are also some files that are specific to the user environment and therefore each programmer should have their own local version of these files. Further details about the contents of the gitignore file can be found below in the Sample gitignore file.</p>
 <p>The next point to consider is branches and how you will use them. Currently the default branch for a new repo on GitHub is main. Branches are a great way to make a copy of the existing repo and then try something, if it works then it can be merged back into the main branch, if not then it can be abandoned until later or deleted. Major branches can be made for Release, Development, and many other reasons. From the major branches it is also possible to create additional branches for specific tasks or features. </p>
 <p>Possibility 1: If using some form of tracking for work items such as Azure DevOps the branches could be names based on the ID of the Work item. This makes searching for branches easier but is less human readable. However, it does create a consistent user interface and adds clarity between the work item and branch associated with it.</p>
 <p>Possibility 2: Name the branches based on the task to be done. For smaller projects and teams this can work well, especially if the branches are merged back in and deleted afterwards. But this can be a bit challenging as projects and teams grow.</p>
@@ -4440,10 +4440,16 @@ Entire folders can be ignore by using the folder name followed by a /
 <p>To ignore all files of a specific type you can use the wildcard. The below will ignore all backup files.
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>*.bak
 </code></pre></div></td></tr></table></div></p>
-<p>There are times when we generally want to ignore all files of a type, except for some specific ones. The tmc files that we use for the Event Logger is an example of this. Most of the tmc files within the project folder are created and managed by TwinCAT so we could add *.tmc to the gitignore file. However this can cause some problems. Therefore we can specifically include certain tmc files after ignore them in general. By adding a ! to the front of the file name, git knows that that specific file should be included, even though the extension has been ignored.</p>
+<p>There are times when we generally want to ignore all files of a type, except for some specific ones. The tmc files that we use for the Event Logger is an example of this. Most of the tmc files within the project folder are created and managed by TwinCAT so we could add *.tmc to the gitignore file. However this can cause some problems. Therefore we can specifically include certain tmc files after ignoring them in general. By adding a <code>!</code> to the front of the file name, git knows that that specific file should be included, even though the extension has been ignored. The use of a common prefix on your tmc files will allow you to add a single item to the exception list. In the example below we ignore all tmc files except for CylinderEvents.tmc, ServoEvents.tmc and any other tmc files that start with Events. Using the prefix <code>!Events</code> will allow each new tmc to be included without having to add each individual file name to the gitignore file.</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>*.tmc
-!myEvents.tmc
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code>*.tmc
+!CylinderEvents.tmc
+!ServoEvents.tmc
+
+!Events*.tmc
 </code></pre></div></td></tr></table></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -4460,7 +4466,8 @@ Entire folders can be ignore by using the folder name followed by a /
 </li>
 </ol>
 </div>
-<p>As a place to start you can copy everything below into your .gitignore file. However it should be expected that this file will need to be customized to your specific situation and needs. For a more exhaustive list of possibilities <a href="https://www.toptal.com/developers/gitignore">www.toptal.io</a> can be used to generate a file that includes both TwinCAT 3 and Visual Studio files.</p>
+<p>As a place to start you can copy everything below into your .gitignore file. However it should be expected that this file will need to be customized to your specific situation and needs. This comes from the <a href="https://infosys.beckhoff.com/content/1033/tc3_sourcecontrol/14604066827.html?id=2009874071818176821">Beckhoff Infosys</a>.</p>
+<p>For a more exhaustive list of possibilities <a href="https://www.toptal.com/developers/gitignore">www.toptal.io</a> can be used to generate a file that includes both TwinCAT 3 and Visual Studio files.</p>
 <div class="copy highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -4493,39 +4500,71 @@ Entire folders can be ignore by using the folder name followed by a /
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code># Visual Studio Files
-*.bak
-*.sln
-*.suo
-*.~u
-.vs
-UpgradeLog.htm
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code>### TwinCAT3 ###
+# website: https://www.beckhoff.com/twincat3/
 
-# TwinCAT Files
-*.sln
-
-## .tpy file can be ignored. They are a holdover from CoDeSys and aren&#39;t used much by beckhoff
-### Source: https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_sourcecontrol/18014398915785483.html&amp;id=
+# TwinCAT PLC
+*.plcproj.bak
+*.plcproj.orig
 *.tpy
+*.tclrs
+*.library
+*.compiled-library
+*.compileinfo
+*.asm
+*.core
+LineIDs.dbg
+LineIDs.dbg.bak
 
-## Compilation Process Artifact
-.tmcRefac
+# TwinCAT C++ and shared types
+# ignoring the TMC file is only useful for plain PLC programming
+# as soon as shared data types (via tmc), C++ or in general TcCom-Module are used, the TMC file has to be part of the repository
+*.tmc
+*.tmcRefac
 
-## TwinCAT Archive Formats
-*.tnzip
-*.tszip
-*.tfzip
+# TwinCAT project files
+*.tsproj.bak
+*.tsproj.b?k
+*.tsproj.orig
+*.xti.bak
+*.xti.bk?
+*.xti.orig
+*.xtv
+*.xtv.bak
+*.xtv.bk?
 
-## Build Files
-_CompileInfo
-_Boot
-_Libraries
+# Multiuser specific
+**/.TcGit/
 
-## TwinCAT Licence Files (Machine Specific)
-TrialLicense.tclrs
+# exclude not required folders
+**/_Boot/
+**/_CompileInfo/
+**/_Libraries/
+**/_ModuleInstall/
+**/_Deployment/
+**/_Repository/
 
-## Project Specific Files (Optional)
-### Add folder or file path(s)
+# VS Shell project specific files and folders
+**/.vs/
+*.~u
+*.project.~u
+*.suo
 </code></pre></div></td></tr></table></div>
 
 
